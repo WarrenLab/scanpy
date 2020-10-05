@@ -1014,10 +1014,15 @@ def _get_color_source_vector(
         and value_to_plot not in adata.obs.columns
         and value_to_plot not in adata.var_names
     ):
-        # We should probably just make an index for this, and share it over runs
-        value_to_plot = adata.var.index[adata.var[gene_symbols] == value_to_plot][
-            0
-        ]  # TODO: Throw helpful error if this doesn't work
+        if use_raw:
+            value_to_plot = adata.raw.var.index[
+                adata.raw.var[gene_symbols] == value_to_plot
+            ][0]
+        else:
+            # We should probably just make an index for this, and share it over runs
+            value_to_plot = adata.var.index[adata.var[gene_symbols] == value_to_plot][
+                0
+            ]  # TODO: Throw helpful error if this doesn't work
     if use_raw and value_to_plot not in adata.obs.columns:
         values = adata.raw.obs_vector(value_to_plot)
     else:
